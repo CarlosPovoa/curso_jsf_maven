@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,56 +23,48 @@ public class Pessoa implements Serializable {
     
     @Id                                         //Id da tabela
     @GeneratedValue                             //Gerado pelo BD auto-incremento
-    @Column (name = "IdPessoa", nullable = false)
-    private Integer idPessoa;
-    @Column (name = "Nome", nullable = false, length = 80)
+    @Column (name = "id", nullable = false)
+    private Integer id;
+    @Column (name = "nome", nullable = false, length = 80)
     private String nome;
-    @Column (name = "Email", length = 80)
+    @Column (name = "email", length = 80)
     private String email;
-    @Column (name = "Telefone", length = 20)    //(999)99999-9999
+    @Column (name = "telefone", length = 20)    //(999)99999-9999
     private String telefone;
-    @Column (name = "CPF", length = 14)         //999.999.999-99
+    @Column (name = "cpf", length = 14)         //999.999.999-99
     private String cpf;
-    @Column (name = "DataNascimento", nullable = false)
+    @Column (name = "datanascimento", nullable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataNascimento;
-    @Column (name = "DataCadastro", nullable = false)
+    @Column (name = "datacadastro", nullable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataCadastro;
     
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "PessoaSexo")
-    private Pessoa pessoa;
-
-    @OneToMany
-    @ForeignKey(name = "PessoaEndereco")
+    //-------------------------------------------------------------------------------------//
+    
+    @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY, targetEntity = Endereco.class)
+    @ForeignKey(name = "endereco_pessoa")
     private List<Endereco> enderecos;
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name = "pessoa_sexo")
+    @JoinColumn(name = "idsexo", referencedColumnName = "id")
+    private Sexo sexo;
 
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public List<Endereco> getEnderecos() {
-        return enderecos;
-    }
-
-    public void setEnderecos(List<Endereco> enderecos) {
-        this.enderecos = enderecos;
-    }
+    //-------------------------------------------------------------------------------------//
     
     public Pessoa() {
+        this.sexo = new Sexo();
     }
 
-    public Integer getIdPessoa() {
-        return idPessoa;
+    //-------------------------------------------------------------------------------------//
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdPessoa(Integer idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -121,11 +115,28 @@ public class Pessoa implements Serializable {
         this.dataCadastro = dataCadastro;
     }
 
+    public List<Endereco> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+    
+    //-------------------------------------------------------------------------------------//
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + (this.idPessoa != null ? this.idPessoa.hashCode() : 0);
+        hash = 53 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
 
@@ -138,11 +149,12 @@ public class Pessoa implements Serializable {
             return false;
         }
         final Pessoa other = (Pessoa) obj;
-        if (this.idPessoa != other.idPessoa && (this.idPessoa == null || !this.idPessoa.equals(other.idPessoa))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+    
     
     
     

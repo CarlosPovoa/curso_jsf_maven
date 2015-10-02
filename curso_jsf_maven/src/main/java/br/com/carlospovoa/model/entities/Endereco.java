@@ -1,14 +1,15 @@
 package br.com.carlospovoa.model.entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 import org.hibernate.annotations.ForeignKey;
 
 @Entity
@@ -19,55 +20,64 @@ public class Endereco implements Serializable {
     
     @Id                                         //Id da tabela
     @GeneratedValue                             //Gerado pelo BD auto-incremento
-    @Column (name = "IdEndereco", nullable = false)
-    private Integer idEndereco;
-    @Column (name = "Bairro", nullable = false, length = 60)
+    @Column (name = "id", nullable = false)
+    private Integer id;
+    @Column (name = "bairro", nullable = false, length = 60)
     private String bairro;
-    @Column (name = "Cep", nullable = false, length = 9)
+    @Column (name = "cep", nullable = false, length = 9)
     private String cep;
-    @Column (name = "Complemento", length = 20)
+    @Column (name = "complemento", length = 20)
     private String complemento;
-    @Column (name = "NomeLogradouro", nullable = false, length = 90)
+    @Column (name = "nomelogradouro", nullable = false, length = 90)
     private String nomeLogradouro;
-    @Column (name = "Numero", nullable = false, length = 6)
+    @Column (name = "numero", nullable = false, length = 6)
     private String numero;
     
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "EnderecoCidade")
+    //-------------------------------------------------------------------------------------//
+
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @ForeignKey(name = "endereco_pessoa")
+    @JoinColumn(name = "idpessoa", referencedColumnName = "id")
+    private Pessoa pessoa;
+   
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name = "endereco_tipoendereco")
+    @JoinColumn(name = "idtipoendereco", referencedColumnName = "id")
+    private TipoEndereco tipoEndereco;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name = "endereco_tipologradouro")
+    @JoinColumn(name = "idtipologradouro", referencedColumnName = "id")
+    private TipoLogradouro tipoLogradouro;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name = "endereco_cidade")
+    @JoinColumn(name = "idcidade", referencedColumnName = "id")
     private Cidade cidade;
 
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "EnderecoEstado")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name = "endereco_estado")
+    @JoinColumn(name = "idestado", referencedColumnName = "id")
     private Estado estado;
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 59 * hash + (this.idEndereco != null ? this.idEndereco.hashCode() : 0);
-        return hash;
+    //-------------------------------------------------------------------------------------//
+    
+    public Endereco() {
+        this.pessoa = new Pessoa();
+        this.tipoEndereco = new TipoEndereco();
+        this.tipoLogradouro = new TipoLogradouro();
+        this.cidade = new Cidade();
+        this.estado = new Estado();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Endereco other = (Endereco) obj;
-        if (this.idEndereco != other.idEndereco && (this.idEndereco == null || !this.idEndereco.equals(other.idEndereco))) {
-            return false;
-        }
-        return true;
+    //-------------------------------------------------------------------------------------//
+
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getIdEndereco() {
-        return idEndereco;
-    }
-
-    public void setIdEndereco(Integer idEndereco) {
-        this.idEndereco = idEndereco;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getBairro() {
@@ -110,22 +120,6 @@ public class Endereco implements Serializable {
         this.numero = numero;
     }
 
-    public Cidade getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(Cidade cidade) {
-        this.cidade = cidade;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
     public Pessoa getPessoa() {
         return pessoa;
     }
@@ -133,7 +127,7 @@ public class Endereco implements Serializable {
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
     }
-
+    
     public TipoEndereco getTipoEndereco() {
         return tipoEndereco;
     }
@@ -150,22 +144,46 @@ public class Endereco implements Serializable {
         this.tipoLogradouro = tipoLogradouro;
     }
 
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "EnderecoPessoa")
-    private Pessoa pessoa;
-
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "EnderecoTipoEndereco")
-    private TipoEndereco tipoEndereco;
-
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "EnderecoTipoLogradouro")
-    private TipoLogradouro tipoLogradouro;
-  
-    
-    public Endereco() {
+    public Cidade getCidade() {
+        return cidade;
     }
 
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
     
+    //-------------------------------------------------------------------------------------//
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Endereco other = (Endereco) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+
     
 }

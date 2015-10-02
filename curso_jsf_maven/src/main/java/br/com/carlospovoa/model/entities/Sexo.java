@@ -19,24 +19,30 @@ public class Sexo implements Serializable {
     
     @Id
     @GeneratedValue
-    @Column (name = "IdSexo", nullable = false)
-    private Integer idSexo;
-    @Column (name = "Descricao", unique = true, nullable = false, length = 10)
+    @Column (name = "id", nullable = false)
+    private Integer id;
+    @Column (name = "descricao", unique = true, nullable = false, length = 10)
     private String descricao;
     
-    @OneToMany(mappedBy = "sexo", fetch = FetchType.LAZY)
-    @ForeignKey(name = "PessoaSexo") //usado para definir a foreignkey qdo exibi o erro, senao exibe numero aleatorios
+    //-------------------------------------------------------------------------------------//
+    
+    @OneToMany(mappedBy = "sexo", fetch = FetchType.LAZY, targetEntity = Pessoa.class)
+    @ForeignKey(name = "pessoa_sexo") //usado para definir a foreignkey qdo exibi o erro, senao exibe numero aleatorios
     private List<Pessoa> pessoas;
 
+    //-------------------------------------------------------------------------------------//
+    
     public Sexo() {
     }
+    
+    //-------------------------------------------------------------------------------------//
 
-    public Integer getIdSexo() {
-        return idSexo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdSexo(Integer idSexo) {
-        this.idSexo = idSexo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -47,19 +53,21 @@ public class Sexo implements Serializable {
         this.descricao = descricao;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 83 * hash + (this.idSexo != null ? this.idSexo.hashCode() : 0);
-        return hash;
-    }
-
     public List<Pessoa> getPessoas() {
         return pessoas;
     }
 
     public void setPessoas(List<Pessoa> pessoas) {
         this.pessoas = pessoas;
+    }
+    
+    //-------------------------------------------------------------------------------------//
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
     }
 
     @Override
@@ -71,12 +79,10 @@ public class Sexo implements Serializable {
             return false;
         }
         final Sexo other = (Sexo) obj;
-        if (this.idSexo != other.idSexo && (this.idSexo == null || !this.idSexo.equals(other.idSexo))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
-    
-    
     
 }

@@ -20,4 +20,23 @@
 	  </exception-handler-factory>
 	</factory>
 -->
+
+    <!-- Internacionalizaçao 
+    <application>
+        <resource-bundle>
+            <base-name>br.com.jsf.i18n.messages</base-name>
+            <var>msgs</var>
+        </resource-bundle>
+        <locate-config>
+            <default-locale>pt_BR</default-locale>
+            <supported-locate>en_US</supported-locate>
+            <supported-locate>es_ES</supported-locate>
+        </locate-config>
+        <message-bundle>
+            br.com.jsf.i18n.messages
+        </message-bundle>                    
+    </application>
+-->
+
+
 </faces-config>

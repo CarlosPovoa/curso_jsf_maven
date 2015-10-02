@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -18,46 +19,30 @@ public class TipoEndereco implements Serializable {
     
     @Id
     @GeneratedValue
-    @Column(name = "IdTipoEndereco", nullable = false)
-    private Integer idTipoEndereco;
-    @Column(name = "Descricao", length = 80, nullable = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+    @Column(name = "descricao", length = 80, nullable = false)
     private String descricao;
     
-    @OneToMany
-    @ForeignKey(name = "TipoEnderecoEndereco")
+    //-------------------------------------------------------------------------------------//
+
+    @OneToMany(mappedBy = "tipoEndereco", fetch = FetchType.LAZY, targetEntity = Endereco.class)
+    @ForeignKey(name = "endereco_tipoendereco")
     private List<Endereco> enderecos;
 
+    //-------------------------------------------------------------------------------------//
+    
     public TipoEndereco() {
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + (this.idTipoEndereco != null ? this.idTipoEndereco.hashCode() : 0);
-        return hash;
+    //-------------------------------------------------------------------------------------//
+
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TipoEndereco other = (TipoEndereco) obj;
-        if (this.idTipoEndereco != other.idTipoEndereco && (this.idTipoEndereco == null || !this.idTipoEndereco.equals(other.idTipoEndereco))) {
-            return false;
-        }
-        return true;
-    }
-
-    public Integer getIdTipoEndereco() {
-        return idTipoEndereco;
-    }
-
-    public void setIdTipoEndereco(Integer idTipoEndereco) {
-        this.idTipoEndereco = idTipoEndereco;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -75,6 +60,31 @@ public class TipoEndereco implements Serializable {
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
+    
+    //-------------------------------------------------------------------------------------//
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TipoEndereco other = (TipoEndereco) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+    
+  
     
 }

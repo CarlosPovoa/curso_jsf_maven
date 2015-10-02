@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -18,46 +19,30 @@ public class TipoLogradouro implements Serializable {
     
     @Id
     @GeneratedValue
-    @Column(name = "IdTipoLogradouro", nullable = false)
-    private Integer idTipoLogradouro;
-    @Column(name = "Descricao", length = 80, nullable = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+    @Column(name = "descricao", length = 80, nullable = false)
     private String descricao;
     
-    @OneToMany
-    @ForeignKey(name = "TipoLogradouroEndereco")
+    //-------------------------------------------------------------------------------------//
+
+    @OneToMany(mappedBy = "tipoLogradouro", fetch = FetchType.LAZY, targetEntity = Endereco.class)
+    @ForeignKey(name = "endereco_tipologradouro")
     private List<Endereco> enderecos;
 
+    //-------------------------------------------------------------------------------------//
+    
     public TipoLogradouro() {
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 11 * hash + (this.idTipoLogradouro != null ? this.idTipoLogradouro.hashCode() : 0);
-        return hash;
+    //-------------------------------------------------------------------------------------//
+
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TipoLogradouro other = (TipoLogradouro) obj;
-        if (this.idTipoLogradouro != other.idTipoLogradouro && (this.idTipoLogradouro == null || !this.idTipoLogradouro.equals(other.idTipoLogradouro))) {
-            return false;
-        }
-        return true;
-    }
-
-    public Integer getIdTipoLogradouro() {
-        return idTipoLogradouro;
-    }
-
-    public void setIdTipoLogradouro(Integer idTipoLogradouro) {
-        this.idTipoLogradouro = idTipoLogradouro;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -75,6 +60,31 @@ public class TipoLogradouro implements Serializable {
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
+    
+    //-------------------------------------------------------------------------------------//
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TipoLogradouro other = (TipoLogradouro) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+    
+  
     
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -18,24 +19,30 @@ public class Estado implements Serializable {
     
     @Id
     @GeneratedValue
-    @Column(name = "IdEstado", nullable = false)
-    private Integer idEstado;
-    @Column(name = "Nome", length = 80, nullable = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+    @Column(name = "nome", length = 80, nullable = false)
     private String nome;
     
-    @OneToMany
-    @ForeignKey(name = "EstadoEndereco")
+    //-------------------------------------------------------------------------------------//
+
+    @OneToMany(mappedBy = "estado", fetch = FetchType.LAZY, targetEntity = Endereco.class)
+    @ForeignKey(name = "endereco_estado")
     private List<Endereco> enderecos;
 
+    //-------------------------------------------------------------------------------------//
+    
     public Estado() {
     }
 
-    public Integer getIdEstado() {
-        return idEstado;
+    //-------------------------------------------------------------------------------------//
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdEstado(Integer idEstado) {
-        this.idEstado = idEstado;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -53,11 +60,13 @@ public class Estado implements Serializable {
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
+    
+    //-------------------------------------------------------------------------------------//
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 53 * hash + (this.idEstado != null ? this.idEstado.hashCode() : 0);
+        hash = 37 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
 
@@ -70,11 +79,12 @@ public class Estado implements Serializable {
             return false;
         }
         final Estado other = (Estado) obj;
-        if (this.idEstado != other.idEstado && (this.idEstado == null || !this.idEstado.equals(other.idEstado))) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+    
 
     
 }
